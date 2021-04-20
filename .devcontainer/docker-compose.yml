@@ -1,0 +1,44 @@
+#  SPDX-License-Identifier: AGPL-3.0-only
+
+#  Demo application written specifically for
+#  L Richardson
+#  Copyright (C) 2020-2021  Patrick McLean - psmware ltd
+
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Affero General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Affero General Public License for more details.
+version: '3'
+
+services:
+  psql-json:
+    image: psql-json
+    container_name: psql-json
+    hostname: psql-json
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    volumes:
+      - ..:/app:cached
+    env_file:
+      - devcontainer.env
+    depends_on:
+      - json-db
+    command: sleep infinity
+
+  json-db:
+    image: json-db
+    container_name: json-db
+    hostname: json-db
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile.db
+    ports:
+      - 0.0.0.0:5432:5432
+    env_file:
+      - devcontainer.env

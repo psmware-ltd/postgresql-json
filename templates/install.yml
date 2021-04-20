@@ -1,0 +1,23 @@
+---
+- hosts: "localhost"
+  connection: "local"
+  vars:
+    nautobot_db_name: "{{ lookup('env', 'DB_NAME') }}"
+    nautobot_db_username: "{{ lookup('env', 'DB_USER') }}"
+    nautobot_db_password: "{{ lookup('env', 'DB_PASSWORD') }}"
+    allowed_hosts:
+      - "*"
+
+  tasks:
+    - name: "CREATE DEMO DATABASE"
+      community.postgresql.postgresql_db:
+        name: "{{ nautobot_db_name }}"
+        state: "present"
+
+    - name: "CREATE DEMO DATABASE USER AND GRANT PRIVILEGES TO DATABASE"
+      community.postgresql.postgresql_user:
+        db: "{{ nautobot_db_name }}"
+        name: "{{ nautobot_db_username }}"
+        password: "{{ nautobot_db_password }}"
+        priv: "ALL"
+        state: "present"
